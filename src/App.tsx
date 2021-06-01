@@ -3,6 +3,8 @@ import './App.css';
 import {Todolist} from './Todolist';
 import {v1} from "uuid";
 
+import {AddItemForm} from "./AddItemForm";
+
 export type TaskType = {
     id: string
     title: string
@@ -49,6 +51,9 @@ function App() {
     function changeTodoListFilter(filterValue: FilterValuesType, todoListID: string){
         setTodoLists(todoList.map(t => t.id === todoListID ? {...t, filter: filterValue} : t))
     }
+    function changeTodoListTitle(title: string, todoListID: string){
+        setTodoLists(todoList.map(t => t.id === todoListID ? {...t, title} : t))
+    }
     function deleteTodoList (todoListID: string) {
         setTodoLists(todoList.filter(t => t.id !== todoListID))
         delete tasks[todoListID]
@@ -56,6 +61,11 @@ function App() {
     function changeCheckBoxValue(taskId: string, isDone: boolean, todoListID: string) {
         const copyTasks = {...tasks}
         copyTasks[todoListID] = tasks[todoListID].map(t => t.id === taskId ? {...t, isDone} : t)
+        setTasks(copyTasks)
+    }
+    function changeTaskTitle(taskId: string, title: string, todoListID: string) {
+        const copyTasks = {...tasks}
+        copyTasks[todoListID] = tasks[todoListID].map(t => t.id === taskId ? {...t, title} : t)
         setTasks(copyTasks)
     }
     const addTask = (title: string, todoListID: string) => {
@@ -68,7 +78,17 @@ function App() {
         copyTasks[todoListID] = [newTask, ...tasks[todoListID]]
         setTasks(copyTasks)
     }
-//sdsdfsdfsdf
+    function addToDoList(title: string) {
+        const newToDoListID = v1()
+        const newToDoList:ToDoListType = {
+            id: newToDoListID,
+            title,
+            filter: "all"
+        }
+        setTodoLists([...todoList, newToDoList])
+        setTasks({...tasks, [newToDoListID]: []})
+    }
+
     function sortedTask(t: ToDoListType) {
         switch (t.filter) {
             case "active":
@@ -92,11 +112,14 @@ function App() {
             changeCheckBoxValue={changeCheckBoxValue}
             deleteTodoList = {deleteTodoList}
             filter={t.filter}
+            changeTaskTitle = {changeTaskTitle}
+            changeTodoListTitle={ changeTodoListTitle}
         />
 
     })
     return (
         <div>
+            <AddItemForm addItem={addToDoList}/>
             {todoListTask}
         </div>
 
