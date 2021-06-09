@@ -1,4 +1,6 @@
 import React, {ChangeEvent, useState} from "react";
+import {IconButton} from "@material-ui/core";
+import {AddBox, Delete} from "@material-ui/icons";
 type AddItemForm = {
    addItem: (title:string) => void
 
@@ -31,7 +33,9 @@ export function AddItemForm(props: AddItemForm){
                 onChange={onChangeTitle}
                 className={error ? "error": ""}
             />
-            <button onClick={addItem}>+</button>
+            <IconButton onClick={addItem}>
+                <AddBox />
+            </IconButton>
         </div>
 
     )

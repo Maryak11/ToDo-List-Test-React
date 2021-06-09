@@ -48,6 +48,9 @@ function App() {
         copyTasks[todoListID] = tasks[todoListID].filter(t => t.id !== taskID)
         setTasks(copyTasks)
     }
+    function removeToDoList(todoListID: string) {
+        setTodoLists(todoList.filter(t => t.id !== todoListID))
+    }
     function changeTodoListFilter(filterValue: FilterValuesType, todoListID: string){
         setTodoLists(todoList.map(t => t.id === todoListID ? {...t, filter: filterValue} : t))
     }
@@ -114,11 +117,12 @@ function App() {
             filter={t.filter}
             changeTaskTitle = {changeTaskTitle}
             changeTodoListTitle={ changeTodoListTitle}
+            removeToDoList = {removeToDoList}
         />
 
     })
     return (
-        <div>
+        <div className={"App"}>
             <AddItemForm addItem={addToDoList}/>
             {todoListTask}
         </div>

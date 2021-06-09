@@ -2,6 +2,8 @@ import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {FilterValuesType, TaskType} from "./App";
 import {AddItemForm} from "./AddItemForm";
 import {EditTableSpan} from "./EditTableSpan";
+import {Button, Checkbox, IconButton} from "@material-ui/core";
+import {Delete} from "@material-ui/icons";
 
 type PropsType = {
     title: string
@@ -15,6 +17,7 @@ type PropsType = {
     todoListID: string
     changeTaskTitle:(taskId: string, title: string, todoListID: string) => void
     changeTodoListTitle:(title: string, todoListID: string) => void
+    removeToDoList:(todoListID: string) => void
 }
 
 export function Todolist(props: PropsType) {
@@ -22,6 +25,7 @@ export function Todolist(props: PropsType) {
     const tasksJSX = props.tasks.map(t => {
             let taskClass = t.isDone ? "isDone" : ""
             const removeTask = () => props.removeTask(t.id, props.todoListID)
+
             const onChangeTask = (e: ChangeEvent<HTMLInputElement>) =>
                 props.changeCheckBoxValue(t.id, e.currentTarget.checked, props.todoListID)
 
@@ -32,46 +36,63 @@ export function Todolist(props: PropsType) {
 
             return (
                 <li key={t.id} className={taskClass}>
-                    <input
-                        type="checkbox"
+                    <Checkbox
+                       color={"primary"}
                         checked={t.isDone}
                         onChange={onChangeTask}
                     />
                     <EditTableSpan title={t.title} changeTitle={changeTaskTitle}/>
                     {/*<span>{t.title}</span>*/}
-                    <button onClick={removeTask}>Delete</button>
+                    <IconButton onClick={removeTask}>
+                        <Delete />
+                    </IconButton>
                 </li>
             )
         }
     )
 
-
+    const removeToDoList = () => props.removeToDoList(props.todoListID)
     const addTask = (title: string) => props.addTask(title, props.todoListID)
     const changeTodoListTitle = (title: string) => {
         props.changeTodoListTitle(title, props.todoListID)
     }
 
     return <div>
-        <h3>{props.title}
+        <h3>
             <EditTableSpan title={props.title} changeTitle={changeTodoListTitle}/>
+            <IconButton onClick={removeToDoList}>
+                <Delete />
+                </IconButton>
         </h3>
         <AddItemForm addItem={addTask}/>
-        <ul>
+        <ul style={{listStyle: "none", padding: "0px"}}>
             {tasksJSX}
         </ul>
         <div>
-            <button onClick={() => props.changeTodoListFilter('all', props.todoListID)}
-                    className={props.filter === "all" ? "buttonActive" : ""}
+            <Button
+                size={"small"}
+                variant={props.filter === "all" ?  "contained" : "outlined"}
+                color={"secondary"}
+                onClick={() => props.changeTodoListFilter('all', props.todoListID)}
+
             >All
-            </button>
-            <button onClick={() => props.changeTodoListFilter('active', props.todoListID)}
-                    className={props.filter === "active" ? "buttonActive" : ""}
+            </Button>
+            <Button
+                size={"small"}
+                variant={props.filter === "active" ? "contained" : "outlined"}
+                color={"secondary"}
+                onClick={() => props.changeTodoListFilter('active', props.todoListID)}
+
             >Active
-            </button>
-            <button onClick={() => props.changeTodoListFilter('completed', props.todoListID)}
-                    className={props.filter === "completed" ? "buttonActive" : ""}
+            </Button>
+            <Button
+                size={"small"}
+                variant={props.filter === "completed" ? "contained" : "outlined"}
+                color={"secondary"}
+                onClick={() => props.changeTodoListFilter('completed', props.todoListID)}
+
             >Completed
-            </button>
+            </Button>
         </div>
     </div>
 }
