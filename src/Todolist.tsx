@@ -4,7 +4,6 @@ import {AddItemForm} from "./AddItemForm";
 import {EditTableSpan} from "./EditTableSpan";
 import {Button, Checkbox, IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
-
 type PropsType = {
     title: string
     tasks: Array<TaskType>
@@ -23,15 +22,15 @@ type PropsType = {
 export function Todolist(props: PropsType) {
 
     const tasksJSX = props.tasks.map(t => {
-            let taskClass = t.isDone ? "isDone" : ""
-            const removeTask = () => props.removeTask(t.id, props.todoListID)
+        let taskClass = t.isDone ? "isDone" : ""
+        const removeTask = () => props.removeTask(t.id, props.todoListID)
 
-            const onChangeTask = (e: ChangeEvent<HTMLInputElement>) =>
-                props.changeCheckBoxValue(t.id, e.currentTarget.checked, props.todoListID)
+        const onChangeTask = (e: ChangeEvent<HTMLInputElement>) =>
+            props.changeCheckBoxValue(t.id, e.currentTarget.checked, props.todoListID)
 
-            const changeTaskTitle = (title: string) => {
-                props.changeTaskTitle(t.id, title, props.todoListID)
-            }
+        const changeTaskTitle = (title: string) => {
+            props.changeTaskTitle(t.id, title, props.todoListID)
+        }
 
 
             return (
@@ -72,7 +71,7 @@ export function Todolist(props: PropsType) {
             <Button
                 size={"small"}
                 variant={props.filter === "all" ?  "contained" : "outlined"}
-                color={"secondary"}
+                color={"default"}
                 onClick={() => props.changeTodoListFilter('all', props.todoListID)}
 
             >All
@@ -80,7 +79,7 @@ export function Todolist(props: PropsType) {
             <Button
                 size={"small"}
                 variant={props.filter === "active" ? "contained" : "outlined"}
-                color={"secondary"}
+                color={"default"}
                 onClick={() => props.changeTodoListFilter('active', props.todoListID)}
 
             >Active
@@ -88,7 +87,7 @@ export function Todolist(props: PropsType) {
             <Button
                 size={"small"}
                 variant={props.filter === "completed" ? "contained" : "outlined"}
-                color={"secondary"}
+                color={"default"}
                 onClick={() => props.changeTodoListFilter('completed', props.todoListID)}
 
             >Completed

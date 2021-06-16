@@ -1,6 +1,7 @@
 import React, {ChangeEvent, useState} from "react";
-import {IconButton} from "@material-ui/core";
+import {IconButton, TextField} from "@material-ui/core";
 import {AddBox, Delete} from "@material-ui/icons";
+import {EditTableSpan} from "./EditTableSpan";
 type AddItemForm = {
    addItem: (title:string) => void
 
@@ -21,18 +22,19 @@ export function AddItemForm(props: AddItemForm){
         }
     }
     const addItem = () => {
-
-            props.addItem(title)
-            setTitle("")
-
+        props.addItem(title)
+        setTitle("")
     }
 
-    return (  <div>
-            <input
+    return (<div>
+            <TextField
                 value={title}
                 onChange={onChangeTitle}
-                className={error ? "error": ""}
+                label={"Добавить"}
+                error={error}
+                helperText={error && "Tittle is required"}
             />
+
             <IconButton onClick={addItem}>
                 <AddBox />
             </IconButton>
