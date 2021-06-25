@@ -1,7 +1,7 @@
 import {FilterValuesType, ToDoListType} from "../App";
 import {v1} from "uuid";
 
-type removeToDoList = {
+export type removeToDoList = {
     type: "REMOVE-TODOLIST"
     todoListID: string
 }
