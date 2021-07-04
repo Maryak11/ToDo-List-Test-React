@@ -12,7 +12,6 @@ type PropsType = {
     addTask: (title: string, todoListID: string) => void
     changeCheckBoxValue: (taskId: string, isDone: boolean, todoListID: string) => void
     filter: FilterValuesType
-    deleteTodoList: (todoListID: string) => void
     todoListID: string
     changeTaskTitle:(taskId: string, title: string, todoListID: string) => void
     changeTodoListTitle:(title: string, todoListID: string) => void

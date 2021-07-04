@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useReducer, useState} from 'react';
 import './App.css';
 import {Todolist} from './Todolist';
 import {v1} from "uuid";
@@ -6,6 +6,15 @@ import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
+import {
+    addTodoListAC,
+    changeTodoListFilterAC,
+    changeTodoListTitleAC,
+    removeTodoListAC,
+    todolistReducer,
+
+} from "./state/todolist-reducer";
+import {taskReducer,removeTaskAC, changeTaskTitleAC, changeTaskStatusAC, AddTasksAC} from './state/task-reducer'
 
 export type TaskType = {
     id: string
@@ -24,15 +33,15 @@ export type TasksStateType = {
 }
 export type FilterValuesType = "all" | "active" | "completed"
 
-function App() {
+function AppWithReducer() {
     const todoListID_1 = v1()
     const todoListID_2 = v1()
-    const [todoList, setTodoLists] = useState<ToDoListType[]>([
+    const [todoList, dispatchTodoLists] = useReducer(todolistReducer,[
         {id: todoListID_1, title: "What to Learn", filter: "all"},
         {id: todoListID_2, title: "What to buy", filter: "all"},
     ])
 
-    const [tasks, setTasks] = useState<TasksStateType>({
+    const [tasks, dispatchTasks] = useReducer(taskReducer,{
         [todoListID_1]: [
             {id: v1(), title: "HTML&CSS", isDone: true},
             {id: v1(), title: "JS", isDone: true},
@@ -46,48 +55,34 @@ function App() {
     })
 
     function removeTask(taskID: string, todoListID: string) {
-        const copyTasks = {...tasks}
-        copyTasks[todoListID] = tasks[todoListID].filter(t => t.id !== taskID)
-        setTasks(copyTasks)
+        dispatchTasks(removeTaskAC(taskID, todoListID))
     }
     function removeToDoList(todoListID: string) {
-        setTodoLists(todoList.filter(t => t.id !== todoListID))
+        let action = removeTodoListAC(todoListID)
+        dispatchTodoLists(action)
+        dispatchTasks(action)
+
     }
     function changeTodoListFilter(filterValue: FilterValuesType, todoListID: string){
-        setTodoLists(todoList.map(t => t.id === todoListID ? {...t, filter: filterValue} : t))
+        let action = changeTodoListFilterAC(filterValue, todoListID)
+        dispatchTodoLists(action)
     }
     function changeTodoListTitle(title: string, todoListID: string){
-        setTodoLists(todoList.map(t => t.id === todoListID ? {...t, title} : t))
+        dispatchTodoLists(changeTodoListTitleAC(title, todoListID))
     }
     function changeCheckBoxValue(taskId: string, isDone: boolean, todoListID: string) {
-        const copyTasks = {...tasks}
-        copyTasks[todoListID] = tasks[todoListID].map(t => t.id === taskId ? {...t, isDone} : t)
-        setTasks(copyTasks)
+       dispatchTasks(changeTaskStatusAC(taskId, isDone, todoListID))
     }
     function changeTaskTitle(taskId: string, title: string, todoListID: string) {
-        const copyTasks = {...tasks}
-        copyTasks[todoListID] = tasks[todoListID].map(t => t.id === taskId ? {...t, title} : t)
-        setTasks(copyTasks)
+       dispatchTasks(changeTaskTitleAC(taskId, title, todoListID))
     }
     const addTask = (title: string, todoListID: string) => {
-        const newTask: TaskType = {
-            id: v1(),
-            title,
-            isDone: false
-        }
-        const copyTasks = {...tasks}
-        copyTasks[todoListID] = [newTask, ...tasks[todoListID]]
-        setTasks(copyTasks)
+       dispatchTasks(AddTasksAC(title, todoListID))
     }
     function addToDoList(title: string) {
-        const newToDoListID = v1()
-        const newToDoList:ToDoListType = {
-            id: newToDoListID,
-            title,
-            filter: "all"
-        }
-        setTodoLists([...todoList, newToDoList])
-        setTasks({...tasks, [newToDoListID]: []})
+      let action = addTodoListAC(title)
+        dispatchTodoLists(action)
+        dispatchTasks(action)
     }
 
     function sortedTask(t: ToDoListType) {
@@ -150,4 +145,4 @@ function App() {
     );
 }
 
-export default App;
+export default AppWithReducer;
