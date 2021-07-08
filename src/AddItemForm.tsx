@@ -4,10 +4,10 @@ import {AddBox, Delete} from "@material-ui/icons";
 import {EditTableSpan} from "./EditTableSpan";
 type AddItemForm = {
    addItem: (title:string) => void
-
 }
 
-export function AddItemForm(props: AddItemForm){
+export const AddItemForm =  React.memo((props: AddItemForm) => {
+    console.log("additemform")
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
 
@@ -41,4 +41,4 @@ export function AddItemForm(props: AddItemForm){
         </div>
 
     )
-}
+})
